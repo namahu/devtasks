@@ -13,6 +13,9 @@ const ListTasks = () => {
     return savedTasks ? JSON.parse(savedTasks) : [];
   });
 
+  const [filter, setFilter] = useState("ALL"); // ✅ Task 1 — filter state
+  const [editingId, setEditingId] = useState(null);
+  const [editingText, setEditingText] = useState("");
   const [filter, setFilter] = useState("ALL");
 
   const filteredTasks = tasks.filter((task) => {
@@ -20,6 +23,33 @@ const ListTasks = () => {
     if (filter === "COMPLETED") return task.completed;
     return true;
   });
+
+  const startEditing = (task) => {
+    setEditingId(task.id);
+    setEditingText(task.text);
+  };
+
+  const saveEdit = (id) => {
+    const trimmed = editingText.trim();
+    if (!trimmed) {
+      setEditingId(null);
+      return;
+    }
+    const updatedTasks = tasks.map((task) =>
+      task.id === id ? { ...task, text: trimmed } : task
+    );
+    setTasks(updatedTasks);
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    setEditingId(null);
+    toast.success("Task updated.", {
+      style: { background: "#000000", color: "#ffffff" },
+    });
+  };
+
+  const handleEditKeyDown = (e, id) => {
+    if (e.key === "Enter") saveEdit(id);
+    if (e.key === "Escape") setEditingId(null);
+  };
 
   const deleteTask = (id) => {
     let deletedTasks = localStorage.getItem("deleted_tasks");
@@ -67,6 +97,11 @@ const ListTasks = () => {
   };
 
   return (
+    <div className="min-h-screen bg-[#FDFDFD] p-6 font-sans antialiased">
+      <div className="max-w-2xl mx-auto bg-white rounded-4xl shadow-lg p-8 border border-neutral-100">
+        <h1 className="text-3xl font-black text-black mb-8 text-center uppercase">
+          Task List
+        </h1>
     <div className={`min-h-screen p-6 font-sans antialiased transition-colors duration-300 ${dark ? "bg-zinc-950" : "bg-[#FDFDFD]"}`}>
       <div className={`max-w-2xl mx-auto rounded-4xl shadow-lg p-8 border transition-colors duration-300 ${dark ? "bg-zinc-900 border-zinc-700" : "bg-white border-neutral-100"}`}>
         <div className="flex justify-between items-center mb-8">
@@ -112,13 +147,37 @@ const ListTasks = () => {
                 key={task.id}
                 className={`flex items-center justify-between rounded-2xl p-4 shadow-sm transition-colors duration-200 ${dark ? "bg-zinc-800" : "bg-neutral-50"}`}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 flex-1 min-w-0">
                   <input
                     type="checkbox"
                     checked={task.completed}
                     onChange={() => toggleComplete(task.id)}
-                    className="w-5 h-5 accent-black cursor-pointer"
+                    className="w-5 h-5 accent-black cursor-pointer shrink-0"
                   />
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    {editingId === task.id ? (
+                      <input
+                        type="text"
+                        value={editingText}
+                        autoFocus
+                        onChange={(e) => setEditingText(e.target.value)}
+                        onBlur={() => saveEdit(task.id)}
+                        onKeyDown={(e) => handleEditKeyDown(e, task.id)}
+                        className="flex-1 min-w-0 bg-transparent border-b-2 border-black outline-none font-bold text-lg text-black uppercase tracking-wide pb-0.5 transition-all duration-200"
+                      />
+                    ) : (
+                      <span
+                        className={`font-semibold text-lg truncate ${
+                          task.completed
+                            ? "line-through text-neutral-400"
+                            : "text-black"
+                        }`}
+                      >
+                        {task.text}
+                      </span>
+                    )}
+
+                    <span className="text-[11px] font-black uppercase px-2 py-1 rounded-full bg-neutral-100 text-neutral-700 shrink-0">
                   <div className="flex items-center gap-3">
                     <span
                       className={`font-semibold text-lg ${
@@ -136,6 +195,22 @@ const ListTasks = () => {
                   </div>
                 </div>
 
+                <div className="flex items-center gap-2 ml-3 shrink-0">
+                  {!task.completed && editingId !== task.id && (
+                    <button
+                      onClick={() => startEditing(task)}
+                      className="px-4 py-2 rounded-xl border border-black text-black font-bold text-sm hover:bg-black hover:text-white transition-all duration-300"
+                    >
+                      Edit
+                    </button>
+                  )}
+                  <button
+                    onClick={() => deleteTask(task.id)}
+                    className="bg-black text-white px-4 py-2 rounded-xl hover:bg-neutral-800 transition-all duration-300 font-bold text-sm"
+                  >
+                    Delete
+                  </button>
+                </div>
                 <button
                   onClick={() => deleteTask(task.id)}
                   className={`px-4 py-2 rounded-xl transition-all duration-300 font-bold text-sm ${dark ? "bg-white text-black hover:bg-gray-100" : "bg-black text-white hover:bg-neutral-800"}`}
