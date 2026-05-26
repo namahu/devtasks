@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useTheme } from "../context/ThemeContext";
 import { useCategory } from "../context/CategoryContext";
@@ -12,11 +12,12 @@ const AddTasks = () => {
   const [category, setCategory] = useState("FEATURE");
   const [priority, setPriority] = useState("MEDIUM");
   const [newCategoryInput, setNewCategoryInput] = useState("");
-const [showInput, setShowInput] = useState(false);
+  const [showInput, setShowInput] = useState(false);
   const [tasks, setTasks] = useState(() => {
     const savedTasks = localStorage.getItem("tasks");
     return savedTasks ? JSON.parse(savedTasks) : [];
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -44,6 +45,19 @@ const [showInput, setShowInput] = useState(false);
     setTasks([...tasks, newTask]);
     toast.success("Task successfully added to roadmap.", {
       style: { background: "#000000", color: "#ffffff" },
+      action: {
+        label: "View List",
+        onClick: () => navigate("/list-tasks"),
+      },
+      actionButtonStyle: {
+        backgroundColor: "transparent",
+        borderColor: "#ffffff",
+        border: "1px solid #ffffff",
+        color: "#ffffff",
+        borderRadius: "8px",
+        padding: "6px 16px",
+        cursor: "pointer",
+      },
     });
     setTask("");
   };
@@ -74,20 +88,32 @@ const [showInput, setShowInput] = useState(false);
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-center p-6 selection:bg-black selection:text-white font-sans antialiased transition-colors duration-300 ${dark ? "bg-zinc-950" : "bg-[#FDFDFD]"}`}>
+    <div
+      className={`min-h-screen flex items-center justify-center p-6 selection:bg-black selection:text-white font-sans antialiased transition-colors duration-300 ${dark ? "bg-zinc-950" : "bg-[#FDFDFD]"}`}
+    >
       {/* React 19 Document Metadata Hoisting */}
       <title>Add Tasks — Dev Tasks Roadmap Planner</title>
-      <meta name="description" content="Add new items, track features, outline bugs, refactor listings, and add lists to your developer todo list instantly on Dev Tasks (addtasks)." />
-      <meta name="keywords" content="addtasks, add tasks, add lists, devtasks, dev tasks todo, create roadmap, bug tracker" />
+      <meta
+        name="description"
+        content="Add new items, track features, outline bugs, refactor listings, and add lists to your developer todo list instantly on Dev Tasks (addtasks)."
+      />
+      <meta
+        name="keywords"
+        content="addtasks, add tasks, add lists, devtasks, dev tasks todo, create roadmap, bug tracker"
+      />
 
-      <div className={`w-full max-w-[480px] rounded-5xl p-12 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.06)] border flex flex-col items-center text-center relative overflow-hidden transition-colors duration-300 ${dark ? "bg-zinc-900 border-zinc-700" : "bg-white border-neutral-100"}`}>
+      <div
+        className={`w-full max-w-[480px] rounded-5xl p-12 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.06)] border flex flex-col items-center text-center relative overflow-hidden transition-colors duration-300 ${dark ? "bg-zinc-900 border-zinc-700" : "bg-white border-neutral-100"}`}
+      >
         <div className="absolute top-0 left-0 w-full h-1.5 bg-black dark:bg-white" />
         <div className="absolute top-6 right-6">
           <ThemeToggle />
         </div>
 
         <div className="space-y-3 mt-5 mb-12">
-          <h1 className={`text-4xl font-black tracking-tight uppercase ${dark ? "text-white" : "text-black"}`}>
+          <h1
+            className={`text-4xl font-black tracking-tight uppercase ${dark ? "text-white" : "text-black"}`}
+          >
             Add Task
           </h1>
           <p className="text-neutral-400 font-medium text-lg">
@@ -128,8 +154,8 @@ const [showInput, setShowInput] = useState(false);
                       category === opt
                         ? "bg-black text-white border-black"
                         : dark
-                        ? "bg-zinc-700 text-neutral-300 border-transparent hover:bg-zinc-600"
-                        : "bg-neutral-100 text-neutral-600 border-transparent hover:bg-neutral-200"
+                          ? "bg-zinc-700 text-neutral-300 border-transparent hover:bg-zinc-600"
+                          : "bg-neutral-100 text-neutral-600 border-transparent hover:bg-neutral-200"
                     }`}
                   >
                     {opt}
@@ -194,9 +220,24 @@ const [showInput, setShowInput] = useState(false);
 
             <div className="flex items-center gap-3 ml-6">
               {[
-                { value: "HIGH", color: "bg-red-500 text-white border-red-500", inactive: "bg-red-500/10 text-red-500 border-red-200 hover:bg-red-500/20" },
-                { value: "MEDIUM", color: "bg-yellow-500 text-white border-yellow-500", inactive: "bg-yellow-500/10 text-yellow-600 border-yellow-200 hover:bg-yellow-500/20" },
-                { value: "LOW", color: "bg-blue-500 text-white border-blue-500", inactive: "bg-blue-500/10 text-blue-500 border-blue-200 hover:bg-blue-500/20" },
+                {
+                  value: "HIGH",
+                  color: "bg-red-500 text-white border-red-500",
+                  inactive:
+                    "bg-red-500/10 text-red-500 border-red-200 hover:bg-red-500/20",
+                },
+                {
+                  value: "MEDIUM",
+                  color: "bg-yellow-500 text-white border-yellow-500",
+                  inactive:
+                    "bg-yellow-500/10 text-yellow-600 border-yellow-200 hover:bg-yellow-500/20",
+                },
+                {
+                  value: "LOW",
+                  color: "bg-blue-500 text-white border-blue-500",
+                  inactive:
+                    "bg-blue-500/10 text-blue-500 border-blue-200 hover:bg-blue-500/20",
+                },
               ].map(({ value, color, inactive }) => (
                 <button
                   type="button"
@@ -225,7 +266,12 @@ const [showInput, setShowInput] = useState(false);
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={3}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
               </svg>
             </div>
           </button>
@@ -240,8 +286,12 @@ const [showInput, setShowInput] = useState(false);
         </Link>
       </div>
 
-      <div className={`fixed top-[-10%] right-[-10%] w-[40vw] h-[40vw] rounded-full blur-[120px] -z-10 opacity-60 ${dark ? "bg-zinc-800" : "bg-neutral-100"}`} />
-      <div className={`fixed bottom-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full blur-[120px] -z-10 opacity-60 ${dark ? "bg-zinc-900" : "bg-neutral-50"}`} />
+      <div
+        className={`fixed top-[-10%] right-[-10%] w-[40vw] h-[40vw] rounded-full blur-[120px] -z-10 opacity-60 ${dark ? "bg-zinc-800" : "bg-neutral-100"}`}
+      />
+      <div
+        className={`fixed bottom-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full blur-[120px] -z-10 opacity-60 ${dark ? "bg-zinc-900" : "bg-neutral-50"}`}
+      />
     </div>
   );
 };
