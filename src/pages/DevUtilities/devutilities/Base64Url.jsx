@@ -96,44 +96,56 @@ const Base64Url = () => {
       <meta name="description" content="Offline Base64 and URL encoding/decoding utility tool." />
 
       <div
-        className={`w-[90%] max-w-6xl mx-auto rounded-3xl sm:rounded-4xl shadow-lg p-4 sm:p-8 border transition-colors duration-300 ${
+        className={`w-full max-w-6xl mx-4 sm:mx-6 md:mx-auto rounded-3xl sm:rounded-4xl shadow-lg p-4 sm:p-8 border transition-colors duration-300 ${
           dark ? "bg-zinc-900 border-zinc-700" : "bg-white border-neutral-100"
         }`}
       >
         {/* Header Area */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
-          <h1
-            className={`text-2xl sm:text-3xl font-black uppercase ${
-              dark ? "text-white" : "text-black"
+        <div className="flex flex-col gap-4 mb-8">
+          <Link
+            to="/devutilities"
+            className={`inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest transition-all duration-300 w-fit ${
+              dark
+                ? "text-neutral-400 hover:text-white"
+                : "text-neutral-500 hover:text-black"
             }`}
           >
-            Base64 Encoder & Decoder
-          </h1>
+            <span>← Back to Workspace</span>
+          </Link>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <h1
+              className={`text-2xl sm:text-3xl font-black uppercase ${
+                dark ? "text-white" : "text-black"
+              }`}
+            >
+              Base64 Encoder & Decoder
+            </h1>
 
-          {/* Mode Selector */}
-          <div
-            className={`flex items-center gap-2 p-1 border rounded-2xl ${
-              dark ? "border-zinc-700 bg-zinc-800" : "border-neutral-200 bg-neutral-50"
-            }`}
-          >
-            {MODES.map((opt) => (
-              <button
-                key={opt.key}
-                type="button"
-                onClick={() => handleModeChange(opt.key)}
-                className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-200 cursor-pointer ${
-                  mode === opt.key
-                    ? dark
-                      ? "bg-white text-black"
-                      : "bg-black text-white"
-                    : dark
-                      ? "text-neutral-400 hover:text-white"
-                      : "text-neutral-400 hover:text-black"
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
+            {/* Mode Selector */}
+            <div
+              className={`flex items-center gap-2 p-1 border rounded-2xl ${
+                dark ? "border-zinc-700 bg-zinc-800" : "border-neutral-200 bg-neutral-50"
+              }`}
+            >
+              {MODES.map((opt) => (
+                <button
+                  key={opt.key}
+                  type="button"
+                  onClick={() => handleModeChange(opt.key)}
+                  className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-200 cursor-pointer ${
+                    mode === opt.key
+                      ? dark
+                        ? "bg-white text-black"
+                        : "bg-black text-white"
+                      : dark
+                        ? "text-neutral-400 hover:text-white"
+                        : "text-neutral-400 hover:text-black"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -201,24 +213,7 @@ const Base64Url = () => {
 
         </div>
 
-        {/* Footer Navigation */}
-        <div
-          className={`mt-12 border-t pt-6 ${
-            dark ? "border-zinc-800" : "border-neutral-100"
-          }`}
-        >
-          <Link
-            to="/devutilities"
-            className={`inline-flex items-center gap-2 text-xs sm:text-sm font-black uppercase tracking-widest transition-all duration-300 ${
-              dark
-                ? "text-neutral-400 hover:text-white"
-                : "text-neutral-500 hover:text-black"
-            }`}
-          >
-            <span>←</span>
-            <span>Back to Workspace</span>
-          </Link>
-        </div>
+
       </div>
     </div>
   );
